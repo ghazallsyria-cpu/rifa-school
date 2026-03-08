@@ -1,0 +1,30 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "18"
+  NPM_FLAGS = "--legacy-peer-deps"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[context.production.environment]
+  NEXT_PUBLIC_APP_URL = "https://rifa-school.netlify.app"
+
+[context.deploy-preview.environment]
+  NEXT_PUBLIC_APP_URL = "$DEPLOY_URL"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-XSS-Protection = "1; mode=block"
+
+[[redirects]]
+  from = "/"
+  to = "/auth/login"
+  status = 302
+  conditions = {Cookie = ["!auth-token"]}
